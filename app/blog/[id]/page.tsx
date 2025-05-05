@@ -99,7 +99,7 @@ const BlogblogData = () => {
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mb-8">
           <div className="flex items-center">
             <Avatar className="h-10 w-10 mr-3">
-              <AvatarFallback>{blogData?.author.charAt(0)}</AvatarFallback>
+              <AvatarFallback>{blogData?.author?.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>
               <div className="font-medium">{blogData?.author}</div>

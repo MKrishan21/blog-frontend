@@ -88,7 +88,7 @@ export default function BlogPage() {
             className="overflow-hidden transition-all hover:shadow-lg"
           >
             <div className="aspect-video relative overflow-hidden">
-              <Link href={`/blog/${post.id}`}>
+              <Link href={`/blog/${post._id}`}>
                 <Image
                   src={post.image}
                   alt={post.title}
@@ -112,7 +112,7 @@ export default function BlogPage() {
                   <span>•</span>
                   <span>{post.readTime}</span>
                 </div>
-                <Link href={`/blog/${post.id}`}>
+                <Link href={`/blog/${post._id}`}>
                   <h3 className="text-xl font-semibold line-clamp-2 hover:text-sky-500 transition-colors">
                     {post.title}
                   </h3>

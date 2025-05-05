@@ -43,16 +43,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getUserBlogs } from "@/api-handeling/apis/getApi";
-import { useAuth } from "../context/AuthContext";
-
 
 export default function DashboardPage() {
   const router = useRouter();
   const [userId, setUserId] = useState("");
+  console.log("userId", userId);
 
   const { data: blogs = [] } = useQuery({
     queryKey: ["my-blogs", userId],
     queryFn: () => getUserBlogs(userId),
+    enabled: !!userId,
   });
 
   useEffect(() => {
@@ -139,7 +139,7 @@ export default function DashboardPage() {
 
         <TabsContent value="published">
           <BlogTable
-            blogs={(blogs || [])?.filter((blog: any) => blog.status)}
+            blogs={blogs?.filter((blog: any) => blog.status)}
             deletePost={deletePost}
             toggleStatus={toggleStatus}
           />
@@ -147,7 +147,7 @@ export default function DashboardPage() {
 
         <TabsContent value="drafts">
           <BlogTable
-            blogs={(blogs || [])?.filter((blog: any) => !blog.status)}
+            blogs={blogs?.filter((blog: any) => !blog.status)}
             deletePost={deletePost}
             toggleStatus={toggleStatus}
           />

@@ -30,7 +30,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const userId = localStorage.getItem("userId") || "";
+  const [userId, setUserId] = useState("");
 
   const { data: userData = [] } = useQuery({
     queryKey: ["user", userId],
@@ -39,7 +39,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   });
 
   useEffect(() => {
+    const storedUserId = localStorage.getItem("userId") || "";
     const token = localStorage.getItem("accessToken");
+    setUserId(storedUserId);
     if (token) setIsAuthenticated(true);
   }, [isAuthenticated]);
 

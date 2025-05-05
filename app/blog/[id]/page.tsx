@@ -59,11 +59,12 @@ const relatedblogDatas = [
 ];
 
 const BlogblogData = () => {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params.id;
   console.log(id, "iddddd");
   const { data: blogData, isLoading: blogLoading } = useQuery({
     queryKey: ["blog", id],
-    queryFn: () => id && getBlogById(id),
+    queryFn: () => id && getBlogById(id as string),
   });
 
   return (
@@ -152,7 +153,6 @@ const BlogblogData = () => {
           className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-a:text-sky-500 hover:prose-a:text-sky-600 prose-img:rounded-lg prose-img:mx-auto mb-12"
           dangerouslySetInnerHTML={{ __html: blogData?.description }}
         />
-
 
         {/* Related blogDatas */}
         <div className="mb-8">

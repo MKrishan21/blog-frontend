@@ -45,13 +45,10 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserBlogs } from "@/api-handeling/apis/getApi";
 import { useAuth } from "../context/AuthContext";
 
-// Sample blog data (in a real app, this would be fetched from a database)
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { userData } = useAuth();
-  const userId = localStorage.getItem("userId") || "";
-  console.log(userId, "hhuiguigigf");
+  const [userId, setUserId] = useState("");
 
   const { data: blogs = [] } = useQuery({
     queryKey: ["my-blogs", userId],
@@ -59,9 +56,12 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
+    const storedUserId = localStorage.getItem("userId") || "";
     const token = localStorage.getItem("accessToken");
     if (!token) {
       router.push("/auth/login");
+    } else {
+      setUserId(storedUserId);
     }
   }, []);
 

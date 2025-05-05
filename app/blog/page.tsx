@@ -19,6 +19,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery } from "@tanstack/react-query";
 import { getAllBlogs } from "@/api-handeling/apis/getApi";
+import BlogLoader from "@/components/my-functions/Loader";
 
 export default function BlogPage() {
   const {
@@ -32,6 +33,12 @@ export default function BlogPage() {
   });
 
   console.log("data", blogData);
+  if (!blogData.success || isLoading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <BlogLoader />
+      </div>
+    );
 
   return (
     <div className="container py-8 md:py-12">
@@ -82,7 +89,7 @@ export default function BlogPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {blogData.map((post: any) => (
+        {blogData?.data?.map((post: any) => (
           <Card
             key={post._id}
             className="overflow-hidden transition-all hover:shadow-lg"

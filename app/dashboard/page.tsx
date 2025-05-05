@@ -43,13 +43,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getUserBlogs } from "@/api-handeling/apis/getApi";
+import BlogLoader from "@/components/my-functions/Loader";
 
 export default function DashboardPage() {
   const router = useRouter();
   const [userId, setUserId] = useState("");
-  console.log("userId", userId);
 
-  const { data: blogs = [] } = useQuery({
+  const { data: blogs = [], isLoading: BlogLoading } = useQuery({
     queryKey: ["my-blogs", userId],
     queryFn: () => getUserBlogs(userId),
     enabled: !!userId,
@@ -82,7 +82,12 @@ export default function DashboardPage() {
     // );
   };
 
-  if (!blogs) return <div>Loading...</div>;
+  if (!blogs.success || BlogLoading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <BlogLoader />
+      </div>
+    );
 
   return (
     <div className="container py-8">
@@ -129,29 +134,35 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <TabsContent value="all">
-          <BlogTable
-            blogs={blogs}
-            deletePost={deletePost}
-            toggleStatus={toggleStatus}
-          />
-        </TabsContent>
+        {BlogLoading ? (
+          <p>Loading blogs...</p>
+        ) : (
+          <>
+            <TabsContent value="all">
+              <BlogTable
+                blogs={blogs?.data}
+                deletePost={deletePost}
+                toggleStatus={toggleStatus}
+              />
+            </TabsContent>
 
-        <TabsContent value="published">
-          <BlogTable
-            blogs={blogs?.filter((blog: any) => blog.status)}
-            deletePost={deletePost}
-            toggleStatus={toggleStatus}
-          />
-        </TabsContent>
+            <TabsContent value="published">
+              <BlogTable
+                blogs={(blogs?.data || []).filter((blog: any) => blog.status)}
+                deletePost={deletePost}
+                toggleStatus={toggleStatus}
+              />
+            </TabsContent>
 
-        <TabsContent value="drafts">
-          <BlogTable
-            blogs={blogs?.filter((blog: any) => !blog.status)}
-            deletePost={deletePost}
-            toggleStatus={toggleStatus}
-          />
-        </TabsContent>
+            <TabsContent value="drafts">
+              <BlogTable
+                blogs={(blogs?.data || [])?.filter((blog: any) => !blog.status)}
+                deletePost={deletePost}
+                toggleStatus={toggleStatus}
+              />
+            </TabsContent>
+          </>
+        )}
       </Tabs>
     </div>
   );
@@ -182,7 +193,7 @@ function BlogTable({ blogs, deletePost, toggleStatus }: BlogTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {blogs.length > 0 ? (
+          {blogs?.length > 0 ? (
             blogs.map((blog) => (
               <TableRow key={blog._id}>
                 <TableCell>

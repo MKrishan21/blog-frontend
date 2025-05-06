@@ -71,7 +71,10 @@ export default function Home() {
             </div>
             <div className="hidden md:block">
               <Image
-                src={featuredBlog?.image}
+                src={
+                  featuredBlog?.image ||
+                  "https://dummyimage.com/1024x600/000/0011ff.png&text=No+Image"
+                }
                 alt={featuredBlog?.title}
                 width={600}
                 height={400}

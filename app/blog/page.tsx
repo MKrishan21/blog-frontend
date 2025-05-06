@@ -5,8 +5,6 @@ import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import { Search, Filter, ArrowLeft, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
@@ -21,7 +19,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllBlogs } from "@/api-handeling/apis/getApi";
 import { useState } from "react";
 import { useDebounce } from "@/components/my-functions/Debounce";
-import BlogLoader from "@/components/my-functions/Loader";
 import CustomPagination from "@/components/my-functions/CostomPAgination";
 
 export default function BlogPage() {
@@ -29,7 +26,7 @@ export default function BlogPage() {
     search: "",
     page: 1,
     limit: 5,
-    sort: "asc",
+    sort: "desc",
     category: "",
   });
   const updateState = (key: string, value: any) => {
@@ -86,12 +83,12 @@ export default function BlogPage() {
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-3 gap-2">
             <Select
               value={state.category}
               onValueChange={(value) => updateState("category", value)}
             >
-              <SelectTrigger className="w-[130px]">
+              <SelectTrigger className="w-[100px]">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
@@ -107,7 +104,7 @@ export default function BlogPage() {
               value={state.sort}
               onValueChange={(value) => updateState("sort", value)}
             >
-              <SelectTrigger className="w-[130px]">
+              <SelectTrigger className="w-[100px]">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
               <SelectContent>
@@ -117,24 +114,15 @@ export default function BlogPage() {
             </Select>
 
             <Select onValueChange={(value) => updateState("limit", value)}>
-              <SelectTrigger className="w-[130px]">
-                <SelectValue placeholder="Per page" />
+              <SelectTrigger className="w-[80px]">
+                <SelectValue placeholder="Limit" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="10">10 per page</SelectItem>
-                <SelectItem value="15">15 per page</SelectItem>
-                <SelectItem value="25">25 per page</SelectItem>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="15">15</SelectItem>
+                <SelectItem value="25">25</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-
-          {/* Pagination */}
-          <div className="flex items-center gap-2">
-            <CustomPagination
-              currentPage={state.page}
-              totalPages={totalPages}
-              onPageChange={(page) => updateState("page", page)}
-            />
           </div>
         </div>
       </div>
@@ -150,7 +138,10 @@ export default function BlogPage() {
               <div className="aspect-video relative overflow-hidden">
                 <Link href={`/blog/${post._id}`}>
                   <Image
-                    src={post.image}
+                    src={
+                      post.image ||
+                      "https://dummyimage.com/1024x600/000/0011ff.png&text=No+Image"
+                    }
                     alt={post.title}
                     fill
                     className="object-cover transition-transform duration-300 hover:scale-105"
@@ -193,6 +184,13 @@ export default function BlogPage() {
               </CardFooter>
             </Card>
           ))}
+      </div>
+      <div className="flex items-center gap-2 mt-10">
+        <CustomPagination
+          currentPage={state.page}
+          totalPages={totalPages}
+          onPageChange={(page) => updateState("page", page)}
+        />
       </div>
     </div>
   );

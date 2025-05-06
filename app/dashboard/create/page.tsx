@@ -111,18 +111,22 @@ export default function CreateBlogPage() {
   const mutation = useMutation({
     mutationFn: (formData: FormData) =>
       isEditMode ? editBlog(blogId!, formData) : addBlog(formData),
-    onSuccess: (message) => {
+    onSuccess: (message, data) => {
       if (message?.status === 400) {
         return toast.error("Failed to save post", {
           description: message?.message || "Please try again later.",
         });
+      } else {
+        router.push("/dashboard");
+        toast.success(
+          isEditMode ? "Post updated!" : "Post saved successfully!",
+          {
+            description: isEditMode
+              ? "Your blog post has been updated."
+              : "Your blog post has been created.",
+          }
+        );
       }
-      router.push("/dashboard");
-      toast.success(isEditMode ? "Post updated!" : "Post saved successfully!", {
-        description: isEditMode
-          ? "Your blog post has been updated."
-          : "Your blog post has been created.",
-      });
     },
     onError: (error) => {
       toast.error("Failed to save post", {

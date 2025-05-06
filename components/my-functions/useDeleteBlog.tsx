@@ -40,9 +40,11 @@ export const useUpdateToggle = (queryKeyToInvalidate: string) => {
       return editBlog(id, formData);
     },
     onSuccess: () => {
+      toast.success("Status updated");
       queryClient.invalidateQueries({ queryKey: [queryKeyToInvalidate] });
     },
     onError: (error) => {
+      toast.error(error.message);
       console.error("Failed to toggle blog status:", error);
     },
   });

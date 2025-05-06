@@ -81,16 +81,10 @@ export default function DashboardPage() {
             Manage your blog posts and content.
           </p>
         </div>
-        <Link href="/dashboard/create?mode=create">
-          <Button className="bg-sky-500 hover:bg-sky-600">
-            <Plus className="mr-2 h-4 w-4" />
-            Create New Post
-          </Button>
-        </Link>
       </div>
 
       <Tabs defaultValue="all" className="mb-8">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center gap-2 mb-6">
           <TabsList>
             <TabsTrigger value="all">All Posts</TabsTrigger>
             <TabsTrigger value="published">Published</TabsTrigger>
@@ -115,6 +109,12 @@ export default function DashboardPage() {
               <Filter className="h-4 w-4" />
             </Button>
           </div> */}
+          <Link href="/dashboard/create?mode=create">
+            <Button className="bg-sky-500 hover:bg-sky-600">
+              <Plus className="mr-2 h-4 w-4" />
+              Create Post
+            </Button>
+          </Link>
         </div>
 
         {BlogLoading ? (
@@ -183,7 +183,10 @@ function BlogTable({ blogs, deletePost, toggleStatus }: BlogTableProps) {
                   <div className="flex items-center gap-3">
                     <div className="h-12 w-12 rounded-md overflow-hidden relative">
                       <Image
-                        src={blog.image}
+                        src={
+                          blog.image ||
+                          "https://dummyimage.com/1024x600/000/0011ff.png&text=No+Image"
+                        }
                         alt={blog.title}
                         fill
                         className="object-cover"

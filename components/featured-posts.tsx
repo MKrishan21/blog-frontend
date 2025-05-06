@@ -30,7 +30,10 @@ export default function FeaturedPosts({ featuredPosts }: any) {
           <div className="aspect-video relative overflow-hidden">
             <Link href={`/blog/${post._id}`}>
               <Image
-                src={post.image}
+                src={
+                  post.image ||
+                  "https://dummyimage.com/1024x600/000/0011ff.png&text=No+Image"
+                }
                 alt={post.title}
                 fill
                 className="object-cover transition-transform duration-300 hover:scale-105"

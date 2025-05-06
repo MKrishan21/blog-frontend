@@ -16,11 +16,19 @@ import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/app/context/AuthContext";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const { isAuthenticated, Handlelogout } = useAuth();
+  const { isAuthenticated, Handlelogout, userData } = useAuth();
+
+  console.log(userData);
+
+  const firstLetter =
+    userData?.name?.charAt(0).toUpperCase() ||
+    userData?.email?.charAt(0).toUpperCase() ||
+    "!";
 
   const routes = [
     {
@@ -77,6 +85,9 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center space-x-2">
+          <Avatar className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-full">
+            <AvatarFallback>{firstLetter}</AvatarFallback>
+          </Avatar>
           <ThemeToggle />
           {!isAuthenticated ? (
             <Link href="/auth/login">
@@ -143,7 +154,7 @@ export default function Navbar() {
                 }}
                 variant="ghost"
                 size="sm"
-                className="hidden md:flex"
+                className=" md:hidden"
               >
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout

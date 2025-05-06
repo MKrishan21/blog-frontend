@@ -6,8 +6,6 @@ const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
 });
 
-console.log("apiClient", process.env.NEXT_PUBLIC_API_BASE_URL);
-
 export const ImageUrl = process.env.NEXT_PUBLIC_SITE_IMAGE_URL;
 
 type PayloadObject = { [key: string]: any };

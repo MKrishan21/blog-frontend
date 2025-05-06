@@ -26,7 +26,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ReactQueryProvider>
             <AuthProvider>
-              <div className="relative max-w-7xl mx-auto min-h-screen flex flex-col">
+              <div className="relative max-w-7xl mx-auto px-2 lg:px-0 min-h-screen flex flex-col">
                 <Navbar />
                 <main className="flex-grow">{children}</main>
                 <Footer />

@@ -1,11 +1,16 @@
-import Link from "next/link"
-import Image from "next/image"
-import { ArrowRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import FeaturedPosts from "@/components/featured-posts"
-import NewsletterSignup from "@/components/newsletter-signup"
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import FeaturedPosts from "@/components/featured-posts";
+import NewsletterSignup from "@/components/newsletter-signup";
+import { useGetAllBlogs } from "@/components/my-functions/useGetAllBlogs";
+import { getTopBlogs } from "@/components/my-functions/ReactQuill";
 
-export default function Home() {
+export default async function Home() {
+  const BlogData = await useGetAllBlogs();
+  const featuredBlog = await getTopBlogs();
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -15,30 +20,37 @@ export default function Home() {
             <div className="flex flex-col justify-center space-y-4">
               <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                  Discover Inspiring Stories & Insights
+                  {featuredBlog?.title}
                 </h1>
                 <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                  Explore thought-provoking articles, stay updated with the latest news, and join our community of curious minds.
+                  {featuredBlog?.shortDescription}
                 </p>
               </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
+              <div className="flex flex-col gap-4 min-[400px]:flex-row">
                 <Link href="/blog">
-                  <Button size="lg" className="bg-sky-500 hover:bg-sky-600">
+                  <Button size="lg" className="bg-sky-500 hover:bg-sky-600 ">
                     Explore Articles
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
-                {/* <Link href="/news">
-                  <Button size="lg" variant="outline">
-                    Latest News
+                <Link
+                  href={`/blog?category=${featuredBlog?.category?.toLowerCase()}`}
+                >
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="hover:bg-sky-600 hover:text-white"
+                  >
+                    Related Posts
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
-                </Link> */}
+                </Link>
               </div>
             </div>
             <div className="hidden md:block">
               <Image
-                src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                alt="Blog hero image"
+                src={featuredBlog?.image}
+                alt={featuredBlog?.title}
                 width={600}
                 height={400}
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full"
@@ -53,13 +65,16 @@ export default function Home() {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Latest Articles</h2>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Latest Articles
+              </h2>
               <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Discover our latest and exciting articles from various categories.
+                Discover our latest and exciting articles from various
+                categories.
               </p>
             </div>
           </div>
-          <FeaturedPosts />
+          <FeaturedPosts featuredPosts={BlogData} />
         </div>
       </section>
 
@@ -68,7 +83,9 @@ export default function Home() {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Explore Categories</h2>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Explore Categories
+              </h2>
               <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Browse articles by your interests and discover new perspectives.
               </p>
@@ -76,12 +93,28 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-8">
             {[
-              { name: "Technology", image: "https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" },
-              { name: "Lifestyle", image: "https://images.pexels.com/photos/2041627/pexels-photo-2041627.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" },
-              { name: "Business", image: "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" },
-              { name: "Health", image: "https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" },
+              {
+                name: "Technology",
+                image:
+                  "https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+              },
+              {
+                name: "Lifestyle",
+                image:
+                  "https://images.pexels.com/photos/2041627/pexels-photo-2041627.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+              },
+              {
+                name: "Business",
+                image:
+                  "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+              },
+              {
+                name: "Health",
+                image:
+                  "https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+              },
             ].map((category) => (
-              <Link 
+              <Link
                 key={category.name}
                 href={`/blog?category=${category.name.toLowerCase()}`}
                 className="group relative overflow-hidden rounded-lg border bg-background shadow-md transition-all hover:shadow-lg"
@@ -95,7 +128,9 @@ export default function Home() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                   <div className="absolute bottom-0 w-full p-4">
-                    <h3 className="text-xl font-semibold text-white">{category.name}</h3>
+                    <h3 className="text-xl font-semibold text-white">
+                      {category.name}
+                    </h3>
                   </div>
                 </div>
               </Link>
@@ -111,5 +146,5 @@ export default function Home() {
         </div>
       </section>
     </div>
-  )
+  );
 }

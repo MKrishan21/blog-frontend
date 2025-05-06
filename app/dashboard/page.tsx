@@ -44,6 +44,7 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getUserBlogs } from "@/api-handeling/apis/getApi";
 import BlogLoader from "@/components/my-functions/Loader";
+import { useDeleteItem } from "@/components/my-functions/useDeleteBlog";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -65,8 +66,10 @@ export default function DashboardPage() {
     }
   }, []);
 
-  const deletePost = (id: number) => {
-    // setBlogs(blogs.filter((blog) => blog.id !== id));
+  const { mutate: deleteBlog } = useDeleteItem("my-blogs");
+
+  const deletePost = (id: string) => {
+    deleteBlog(id);
   };
 
   const toggleStatus = (id: number) => {
@@ -113,7 +116,7 @@ export default function DashboardPage() {
             <TabsTrigger value="published">Published</TabsTrigger>
             <TabsTrigger value="drafts">Drafts</TabsTrigger>
           </TabsList>
-          <div className="hidden md:flex items-center gap-2">
+          {/* <div className="hidden md:flex items-center gap-2">
             <div className="relative w-[250px]">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input placeholder="Search posts..." className="pl-8" />
@@ -131,7 +134,7 @@ export default function DashboardPage() {
             <Button variant="outline" size="icon">
               <Filter className="h-4 w-4" />
             </Button>
-          </div>
+          </div> */}
         </div>
 
         {BlogLoading ? (
@@ -170,7 +173,7 @@ export default function DashboardPage() {
 
 interface BlogTableProps {
   blogs: any[];
-  deletePost: (id: number) => void;
+  deletePost: (id: string) => void;
   toggleStatus: (id: number) => void;
 }
 
@@ -260,7 +263,7 @@ function BlogTable({ blogs, deletePost, toggleStatus }: BlogTableProps) {
                         </Link>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                          onClick={() => deletePost(blog.id)}
+                          onClick={() => deletePost(blog._id)}
                           className="text-destructive focus:text-destructive"
                         >
                           <Trash className="mr-2 h-4 w-4" />

@@ -56,7 +56,7 @@ export default function Navbar() {
         <div className="flex items-center">
           <Link href="/" className="flex items-center space-x-2">
             <span className="text-xl font-bold transition-colors">
-              Modern<span className="text-sky-500">Blog</span>
+              AshiKaze<span className="text-sky-500"> Blog</span>
             </span>
           </Link>
         </div>
@@ -129,14 +129,24 @@ export default function Navbar() {
                 {route.label}
               </Link>
             ))}
-            <Link
-              href="/auth/login"
-              onClick={() => setIsOpen(false)}
-              className="flex items-center py-2 px-3 text-base font-medium rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-            >
-              <LogIn className="mr-3 h-5 w-5" />
-              Login
-            </Link>
+            {!isAuthenticated ? (
+              <Link href="/auth/login">
+                <Button variant="ghost" size="sm" className="hidden md:flex">
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Login
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                onClick={Handlelogout}
+                variant="ghost"
+                size="sm"
+                className="hidden md:flex"
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+              </Button>
+            )}
           </div>
         </div>
       )}

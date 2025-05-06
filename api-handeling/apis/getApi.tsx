@@ -1,7 +1,7 @@
 import { get } from "../HttpServiceInstance";
 
 export const getAllBlogs = async () => {
-  const res = await get("/api/blogs");
+  const res = await get(`/api/blogs?page=1&limit=5&sort=asc&search=react`);
   return res;
 };
 

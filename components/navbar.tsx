@@ -130,15 +130,18 @@ export default function Navbar() {
               </Link>
             ))}
             {!isAuthenticated ? (
-              <Link href="/auth/login">
-                <Button variant="ghost" size="sm" className="hidden md:flex">
+              <Link href="/auth/login" onClick={() => setIsOpen(false)}>
+                <Button variant="ghost" size="sm" className="">
                   <LogIn className="mr-2 h-4 w-4" />
                   Login
                 </Button>
               </Link>
             ) : (
               <Button
-                onClick={Handlelogout}
+                onClick={() => {
+                  Handlelogout();
+                  setIsOpen(false);
+                }}
                 variant="ghost"
                 size="sm"
                 className="hidden md:flex"

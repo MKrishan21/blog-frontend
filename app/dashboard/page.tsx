@@ -4,17 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
-import {
-  Edit,
-  Trash,
-  Plus,
-  Filter,
-  Search,
-  MoreVertical,
-  ArrowUpDown,
-} from "lucide-react";
+import { Edit, Trash, Plus, MoreVertical, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -30,13 +21,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -44,7 +28,10 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getUserBlogs } from "@/api-handeling/apis/getApi";
 import BlogLoader from "@/components/my-functions/Loader";
-import { useDeleteItem } from "@/components/my-functions/useDeleteBlog";
+import {
+  useDeleteItem,
+  useUpdateToggle,
+} from "@/components/my-functions/useDeleteBlog";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -72,17 +59,10 @@ export default function DashboardPage() {
     deleteBlog(id);
   };
 
-  const toggleStatus = (id: number) => {
-    // setBlogs(
-    //   blogs.map((blog) =>
-    //     blog.id === id
-    //       ? {
-    //           ...blog,
-    //           status: blog.status === "published" ? "draft" : "published",
-    //         }
-    //       : blog
-    //   )
-    // );
+  const { mutate: toggleBlogStatus } = useUpdateToggle("my-blogs");
+
+  const toggleStatus = (id: string, currentStatus: string) => {
+    toggleBlogStatus({ id, currentStatus });
   };
 
   if (!blogs.success || BlogLoading)
@@ -174,7 +154,7 @@ export default function DashboardPage() {
 interface BlogTableProps {
   blogs: any[];
   deletePost: (id: string) => void;
-  toggleStatus: (id: number) => void;
+  toggleStatus: (id: string, currentStatus: string) => void;
 }
 
 function BlogTable({ blogs, deletePost, toggleStatus }: BlogTableProps) {
@@ -219,8 +199,10 @@ function BlogTable({ blogs, deletePost, toggleStatus }: BlogTableProps) {
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <Switch
-                      checked={blog.status}
-                      onCheckedChange={() => toggleStatus(blog._id)}
+                      checked={blog?.status}
+                      onCheckedChange={() =>
+                        toggleStatus(blog._id, blog?.status)
+                      }
                     />
                     <Badge
                       variant={

@@ -38,7 +38,6 @@ export const useLoginMutation = () => {
   return useMutation({
     mutationFn: userLogin,
     onSuccess: (message, data) => {
-      console.log(message, "message");
       if (message?.status === 400) {
         return toast.error("Invalid Credentials!");
       }

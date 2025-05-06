@@ -1,5 +1,3 @@
-import { useGetAllBlogs } from "./useGetAllBlogs";
-
 export const modules = {
   toolbar: [
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -26,20 +24,13 @@ export const formats = [
   "background",
 ];
 
-export const getTopBlogs = async () => {
-  const getTopBlog = await useGetAllBlogs();
-  const topBlogs = getTopBlog?.data?.slice(0, 4);
-  const randomIndex = Math.floor(Math.random() * topBlogs.length);
-  return topBlogs[randomIndex];
-};
-
-export const paginationContent = async () => {
-  const res = await useGetAllBlogs();
-  const pagination = {
-    total: res?.pagination?.total || 2,
-    page: res?.pagination?.page || 1,
-    limit: res?.pagination?.limit || 10,
-    totalPages: res?.pagination?.totalPages || 1,
-  };
-  return pagination;
-};
+export const tagBgColors = [
+  "bg-blue-100",
+  "bg-green-100",
+  "bg-yellow-100",
+  "bg-red-100",
+  "bg-purple-100",
+  "bg-pink-100",
+  "bg-orange-100",
+  "bg-teal-100",
+];

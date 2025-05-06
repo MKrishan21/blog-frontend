@@ -1,16 +1,38 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FeaturedPosts from "@/components/featured-posts";
 import NewsletterSignup from "@/components/newsletter-signup";
-import { useGetAllBlogs } from "@/components/my-functions/useGetAllBlogs";
-import { getTopBlogs } from "@/components/my-functions/ReactQuill";
+import { useQuery } from "@tanstack/react-query";
+import { getAllBlogs } from "@/api-handeling/apis/getApi";
+import { useRandomItem } from "@/components/my-functions/Debounce";
+import BlogLoader from "@/components/my-functions/Loader";
 
-export default async function Home() {
-  const BlogData = await useGetAllBlogs();
-  const featuredBlog = await getTopBlogs();
+export default function Home() {
+  const { data: BlogData, isLoading } = useQuery({
+    queryKey: [
+      "blogs",
+      {
+        search: "",
+        page: 1,
+        limit: 10,
+        sort: "desc",
+        category: "",
+      },
+    ],
+    queryFn: getAllBlogs,
+  });
+  const featuredBlog = useRandomItem(BlogData?.data || []);
 
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <BlogLoader />
+      </div>
+    );
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}

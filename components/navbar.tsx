@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   Menu,
   X,
-  Newspaper,
   Home,
   FileEdit,
   LogIn,

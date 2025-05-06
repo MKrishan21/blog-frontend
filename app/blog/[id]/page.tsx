@@ -1,25 +1,11 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
-import {
-  ChevronLeft,
-  Clock,
-  Calendar,
-  Share2,
-  Bookmark,
-  Facebook,
-  Twitter,
-  Linkedin,
-} from "lucide-react";
+import { ChevronLeft, Clock, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useParams } from "next/navigation";
-import { getBlogById } from "@/api-handeling/apis/getApi";
-import { useQuery } from "@tanstack/react-query";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { tagBgColors } from "@/components/my-functions/ReactQuill";
 
 // Related blogDatas
 const relatedblogDatas = [
@@ -58,14 +44,53 @@ const relatedblogDatas = [
   },
 ];
 
-const BlogblogData = () => {
-  const params = useParams();
-  const id = params.id;
-  console.log(id, "iddddd");
-  const { data: blogData, isLoading: blogLoading } = useQuery({
-    queryKey: ["blog", id],
-    queryFn: () => id && getBlogById(id as string),
-  });
+// This should be placed in app/blog/[id]/page.js for Next.js to automatically provide params
+async function getBlogData(id: string) {
+  try {
+    // Use native fetch API for server components
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}api/blogs/${id}`,
+      {
+        next: { revalidate: 3600 }, // Revalidate cache every hour
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch blog data: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching blog data:", error);
+    return null;
+  }
+}
+
+type Props = {
+  params: {
+    id: string;
+  };
+};
+
+export default async function BlogPage({ params }: Props) {
+  const { id } = params;
+  const blogData = await getBlogData(id);
+
+  if (!blogData) {
+    return (
+      <div className="container py-8 md:py-12">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-2xl font-bold">Blog post not found</h1>
+          <Link
+            href="/blog"
+            className="text-sky-500 hover:text-sky-600 mt-4 inline-block"
+          >
+            Return to all articles
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container py-8 md:py-12">
@@ -92,17 +117,17 @@ const BlogblogData = () => {
 
         {/* Article title */}
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
-          {blogData?.title}
+          {blogData.title}
         </h1>
 
         {/* Article meta */}
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mb-8">
           <div className="flex items-center">
             <Avatar className="h-10 w-10 mr-3">
-              <AvatarFallback>{blogData?.author?.charAt(0)}</AvatarFallback>
+              <AvatarFallback>{blogData.author?.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>
-              <div className="font-medium">{blogData?.author}</div>
+              <div className="font-medium">{blogData.author}</div>
               <div className="text-sm text-muted-foreground">Author</div>
             </div>
           </div>
@@ -110,7 +135,7 @@ const BlogblogData = () => {
           <div className="flex items-center text-muted-foreground">
             <Calendar className="mr-2 h-4 w-4" />
             <span className="text-sm">
-              {blogData?.createdAt
+              {blogData.createdAt
                 ? formatDistanceToNow(new Date(blogData.createdAt), {
                     addSuffix: true,
                   })
@@ -121,27 +146,32 @@ const BlogblogData = () => {
           <div className="flex items-center text-muted-foreground">
             <Clock className="mr-2 h-4 w-4" />
             <span className="text-sm">
-              {new Date(blogData?.createdAt).toLocaleTimeString()}
+              {new Date(blogData.createdAt).toLocaleTimeString()}
             </span>
           </div>
         </div>
 
         {/* Tags & social sharing */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div className="flex items-center justify-between gap-4 mb-8">
           <div className="flex flex-wrap gap-2">
-            {blogData?.tags?.map((tag: string, index: number) => (
-              <div className="bg-blue-50 rounded-sm p-2">
-                <text>{tag}</text>
-              </div>
-            ))}
+            {blogData.tags?.[0]
+              ?.split(",")
+              .map((tag: string, index: number) => {
+                const bgColor = tagBgColors[index % tagBgColors.length];
+                return (
+                  <div key={index} className={`${bgColor} rounded-sm p-2`}>
+                    <span className="text-lg font-bold">{tag.trim()}</span>
+                  </div>
+                );
+              })}
           </div>
         </div>
 
         {/* Featured image */}
         <div className="relative aspect-[16/9] mb-8 overflow-hidden rounded-lg">
           <Image
-            src={blogData?.image}
-            alt={blogData?.title}
+            src={blogData.image}
+            alt={blogData.title}
             fill
             priority
             className="object-cover"
@@ -151,7 +181,7 @@ const BlogblogData = () => {
         {/* Article content */}
         <div
           className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-a:text-sky-500 hover:prose-a:text-sky-600 prose-img:rounded-lg prose-img:mx-auto mb-12"
-          dangerouslySetInnerHTML={{ __html: blogData?.description }}
+          dangerouslySetInnerHTML={{ __html: blogData.description }}
         />
 
         {/* Related blogDatas */}
@@ -191,6 +221,4 @@ const BlogblogData = () => {
       </div>
     </div>
   );
-};
-
-export default BlogblogData;
+}

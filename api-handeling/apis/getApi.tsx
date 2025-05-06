@@ -1,7 +1,23 @@
+import { QueryFunctionContext } from "@tanstack/react-query";
 import { get } from "../HttpServiceInstance";
 
-export const getAllBlogs = async () => {
-  const res = await get(`/api/blogs?page=1&limit=5&sort=asc&search=react`);
+export const getAllBlogs = async ({
+  queryKey,
+}: QueryFunctionContext): Promise<any> => {
+  const [_key, { search, page, limit, sort, category }] = queryKey as [
+    string,
+    {
+      search: string;
+      page: number;
+      limit: number;
+      sort: string;
+      category: string;
+    }
+  ];
+
+  const res = await get(
+    `/api/blogs?page=${page}&limit=${limit}&search=${search}&sort=${sort}&category=${category}`
+  );
   return res;
 };
 

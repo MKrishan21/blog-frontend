@@ -24,8 +24,7 @@ export default function Navbar() {
   const { isAuthenticated, Handlelogout, userData } = useAuth();
   const firstLetter =
     userData?.name?.charAt(0).toUpperCase() ||
-    userData?.email?.charAt(0).toUpperCase() ||
-    "!";
+    userData?.email?.charAt(0).toUpperCase();
 
   const routes = [
     {
@@ -83,7 +82,9 @@ export default function Navbar() {
 
         <div className="flex items-center space-x-2">
           <Avatar className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-full">
-            <AvatarFallback>{firstLetter}</AvatarFallback>
+            <AvatarFallback>
+              {isAuthenticated ? firstLetter : "!"}
+            </AvatarFallback>
           </Avatar>
           <ThemeToggle />
           {!isAuthenticated ? (

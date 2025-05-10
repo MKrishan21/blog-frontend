@@ -82,6 +82,12 @@ export default function DashboardPage() {
           </p>
         </div>
       </div>
+      <Link href="/dashboard/create?mode=create">
+        <Button className="bg-sky-500 hover:bg-sky-600 mb-4">
+          <Plus className="mr-2 h-4 w-4" />
+          Create Post
+        </Button>
+      </Link>
 
       <Tabs defaultValue="all" className="mb-8">
         <div className="flex justify-between items-center gap-2 mb-6">
@@ -109,12 +115,6 @@ export default function DashboardPage() {
               <Filter className="h-4 w-4" />
             </Button>
           </div> */}
-          <Link href="/dashboard/create?mode=create">
-            <Button className="bg-sky-500 hover:bg-sky-600">
-              <Plus className="mr-2 h-4 w-4" />
-              Create Post
-            </Button>
-          </Link>
         </div>
 
         {BlogLoading ? (

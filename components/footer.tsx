@@ -14,7 +14,7 @@ export default function Footer() {
               A beautiful blog website with the latest news and articles on
               various topics.
             </p>
-            <div className="flex space-x-3">
+            {/* <div className="flex space-x-3">
               <Link
                 href="#"
                 className="text-muted-foreground hover:text-primary"
@@ -43,7 +43,7 @@ export default function Footer() {
                 <Github className="h-5 w-5" />
                 <span className="sr-only">GitHub</span>
               </Link>
-            </div>
+            </div> */}
           </div>
 
           <div className="grid grid-cols-2">
@@ -137,7 +137,7 @@ export default function Footer() {
 
         <div className="mt-10 border-t pt-6">
           <p className="text-center text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} ModernBlog. All rights reserved.
+            &copy; {new Date().getFullYear()} AshiKaze. All rights reserved.
           </p>
         </div>
       </div>

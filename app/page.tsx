@@ -49,9 +49,9 @@ export default function Home() {
                   {featuredBlog?.shortDescription}
                 </p>
               </div>
-              <div className="flex flex-col gap-4 min-[400px]:flex-row">
+              <div className="flex flex-col gap-4 min-[320px]:flex-row">
                 <Link href={`/blog/${featuredBlog?._id}`}>
-                  <Button size="lg" className="bg-sky-500 hover:bg-sky-600 ">
+                  <Button size="sm" className="bg-sky-500 hover:bg-sky-600 ">
                     Explore Article
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -61,7 +61,7 @@ export default function Home() {
                 >
                   <Button
                     variant="outline"
-                    size="lg"
+                    size="sm"
                     className="hover:bg-sky-600 hover:text-white"
                   >
                     Related Posts

@@ -112,7 +112,10 @@ export default function CreateBlogPage() {
     mutationFn: (formData: FormData) =>
       isEditMode ? editBlog(blogId!, formData) : addBlog(formData),
     onSuccess: (message, data) => {
-      if (message?.status === 400) {
+      if (message?.status === 401) {
+        toast.error("Token Expired ! Please Login Again.");
+        router.push("/auth/login"), localStorage.removeItem("accessToken");
+      } else if (message?.status === 400) {
         return toast.error("Failed to save post", {
           description: message?.message || "Please try again later.",
         });

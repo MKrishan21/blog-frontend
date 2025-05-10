@@ -1,7 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { post, postAsForm, putAsForm } from "../HttpServiceInstance";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Varela } from "next/font/google";
 
 type payloadObject = { [key: string]: any };
 
@@ -69,7 +70,6 @@ export const useRegisterMutation = () => {
   return useMutation({
     mutationFn: userRegister,
     onSuccess: (message) => {
-      // console.log(message, "message");
       if (message?.message === "User registered successfully") {
         toast.success("Registration Successful");
         router.push("/auth/login");
@@ -81,4 +81,46 @@ export const useRegisterMutation = () => {
       toast.error(error?.data?.message || "Something went wrong!");
     },
   });
+};
+
+// Like Api
+
+export const likePost = async (id: string) => {
+  try {
+    const response = await post(`/api/blogs/likes/${id}`, {});
+    return response;
+  } catch (error) {
+    console.error("Error in signupHelper:", error);
+    throw error;
+  }
+};
+
+export const useLikePost = () => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const mutation = useMutation({
+    mutationFn: (id: string) => likePost(id),
+    onSuccess: (data, variables) => {
+      console.log(data, variables);
+
+      if (data?.status === 401) {
+        toast.error("Credientials expired, please login again !");
+        router.push("auth/login");
+        localStorage.removeItem("accessToken");
+        window.location.reload();
+      } else {
+        toast.success(data?.message);
+        queryClient.invalidateQueries({ queryKey: ["blogs"] });
+        queryClient.invalidateQueries({
+          queryKey: ["myIntrections", variables],
+        });
+      }
+    },
+    onError: (error) => {
+      console.error("Like failed:", error);
+    },
+  });
+
+  return mutation;
 };

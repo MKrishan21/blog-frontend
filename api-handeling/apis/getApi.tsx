@@ -1,5 +1,5 @@
-import { QueryFunctionContext } from "@tanstack/react-query";
-import { get } from "../HttpServiceInstance";
+import { QueryFunctionContext, useQuery } from "@tanstack/react-query";
+import { get, getJwt } from "../HttpServiceInstance";
 
 export const getAllBlogs = async ({
   queryKey,
@@ -46,4 +46,23 @@ export const getUserBlogs = async (id: string) => {
   } catch (error) {
     console.log("error", error);
   }
+};
+
+// get my intractions
+
+export const getMyIntractionsById = async (id: string) => {
+  try {
+    const res = await getJwt(`/api/blogs/likes-favourit/${id}`);
+    return res;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const myIntrections = (id: string) => {
+  return useQuery({
+    queryKey: ["myIntrections", id],
+    queryFn: () => getMyIntractionsById(id),
+    refetchOnWindowFocus: false,
+  });
 };

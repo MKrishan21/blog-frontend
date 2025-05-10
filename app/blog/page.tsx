@@ -1,12 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { formatDistanceToNow } from "date-fns";
-import { Search, Filter, ArrowLeft, ArrowRight } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -14,12 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useQuery } from "@tanstack/react-query";
 import { getAllBlogs } from "@/api-handeling/apis/getApi";
 import { useState } from "react";
 import { useDebounce } from "@/components/my-functions/Debounce";
 import CustomPagination from "@/components/my-functions/CostomPAgination";
+import FeaturedPosts from "@/components/featured-posts";
+import PostCard from "@/components/featured-posts";
 
 export default function BlogPage() {
   const [state, setState] = useState({
@@ -51,12 +47,6 @@ export default function BlogPage() {
     queryFn: getAllBlogs,
   });
   const totalPages = blogData?.pagination?.totalPages || 1;
-  // if (isLoading)
-  //   return (
-  //     <div className="flex items-center justify-center h-screen">
-  //       <BlogLoader />
-  //     </div>
-  //   );
 
   return (
     <div className="container py-8 md:py-12">
@@ -127,64 +117,14 @@ export default function BlogPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {blogData?.data
-          ?.filter((blog: any) => blog?.status)
-          ?.map((post: any) => (
-            <Card
-              key={post._id}
-              className="overflow-hidden transition-all hover:shadow-lg"
-            >
-              <div className="aspect-video relative overflow-hidden">
-                <Link href={`/blog/${post._id}`}>
-                  <Image
-                    src={
-                      post.image ||
-                      "https://dummyimage.com/1024x600/000/0011ff.png&text=No+Image"
-                    }
-                    alt={post.title}
-                    fill
-                    className="object-cover transition-transform duration-300 hover:scale-105"
-                  />
-                </Link>
-                <div className="absolute top-2 left-2">
-                  <Badge className="bg-sky-500 hover:bg-sky-600">
-                    {post.category}
-                  </Badge>
-                </div>
-              </div>
-
-              <CardContent className="p-4">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span>
-                      {formatDistanceToNow(post.createdAt, { addSuffix: true })}
-                    </span>
-                    <span>•</span>
-                    <span>{post.readTime}</span>
-                  </div>
-                  <Link href={`/blog/${post._id}`}>
-                    <h3 className="text-xl font-semibold line-clamp-2 hover:text-sky-500 transition-colors">
-                      {post.title}
-                    </h3>
-                  </Link>
-                  <p className="text-muted-foreground line-clamp-3">
-                    {post?.shortDescription}
-                  </p>
-                </div>
-              </CardContent>
-
-              <CardFooter className="p-4 pt-0">
-                <div className="flex items-center gap-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback>{post.author.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm font-medium">{post.author}</span>
-                </div>
-              </CardFooter>
-            </Card>
+      <section className="w-full">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-8">
+          {blogData?.data?.map((post: any) => (
+            <PostCard key={post._id} post={post} />
           ))}
-      </div>
+        </div>
+      </section>
+
       <div className="flex items-center gap-2 mt-10">
         <CustomPagination
           currentPage={state.page}

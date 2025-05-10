@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllBlogs } from "@/api-handeling/apis/getApi";
 import { useRandomItem } from "@/components/my-functions/Debounce";
 import BlogLoader from "@/components/my-functions/Loader";
+import PostCard from "@/components/featured-posts";
 
 export default function Home() {
   const { data: BlogData, isLoading } = useQuery({
@@ -49,9 +50,9 @@ export default function Home() {
                 </p>
               </div>
               <div className="flex flex-col gap-4 min-[400px]:flex-row">
-                <Link href="/blog">
+                <Link href={`/blog/${featuredBlog?._id}`}>
                   <Button size="lg" className="bg-sky-500 hover:bg-sky-600 ">
-                    Explore Articles
+                    Explore Article
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -99,7 +100,11 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <FeaturedPosts featuredPosts={BlogData} />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-8">
+            {BlogData?.data?.map((post: any) => (
+              <PostCard key={post._id} post={post} />
+            ))}
+          </div>
         </div>
       </section>
 

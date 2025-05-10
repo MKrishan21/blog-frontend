@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { tagBgColors } from "@/components/my-functions/ReactQuill";
+import { FaRegHeart } from "react-icons/fa";
 
 // Related blogDatas
 const relatedblogDatas = [
@@ -121,7 +122,37 @@ export default async function BlogPage({ params }: Props) {
         </h1>
 
         {/* Article meta */}
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mb-8">
+
+        {/* Tags & social sharing */}
+        <div className="flex items-center justify-between gap-4 mb-8">
+          <div className="flex flex-wrap gap-2">
+            {blogData.tags?.[0]
+              ?.split(",")
+              .map((tag: string, index: number) => {
+                const bgColor = tagBgColors[index % tagBgColors.length];
+                return (
+                  <div key={index} className={`${bgColor} rounded-sm p-2`}>
+                    <span className="text-lg font-bold">{tag.trim()}</span>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+
+        {/* Featured image */}
+        <div className="relative aspect-[16/9] mb-8 overflow-hidden rounded-lg">
+          <Image
+            src={
+              blogData.image ||
+              "https://dummyimage.com/1024x600/000/0011ff.png&text=No+Image"
+            }
+            alt={blogData.title}
+            fill
+            priority
+            className="object-cover"
+          />
+        </div>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mb-8 border p-1 rounded-sm">
           <div className="flex items-center">
             <Avatar className="h-10 w-10 mr-3">
               <AvatarFallback>{blogData.author?.charAt(0)}</AvatarFallback>
@@ -149,33 +180,10 @@ export default async function BlogPage({ params }: Props) {
               {new Date(blogData.createdAt).toLocaleTimeString()}
             </span>
           </div>
-        </div>
-
-        {/* Tags & social sharing */}
-        <div className="flex items-center justify-between gap-4 mb-8">
-          <div className="flex flex-wrap gap-2">
-            {blogData.tags?.[0]
-              ?.split(",")
-              .map((tag: string, index: number) => {
-                const bgColor = tagBgColors[index % tagBgColors.length];
-                return (
-                  <div key={index} className={`${bgColor} rounded-sm p-2`}>
-                    <span className="text-lg font-bold">{tag.trim()}</span>
-                  </div>
-                );
-              })}
+          <div className="flex items-center text-muted-foreground">
+            <FaRegHeart className="mr-2 h-4 w-4" />
+            <span className="text-sm">{blogData.likesCount || "0"}</span>
           </div>
-        </div>
-
-        {/* Featured image */}
-        <div className="relative aspect-[16/9] mb-8 overflow-hidden rounded-lg">
-          <Image
-            src={blogData.image}
-            alt={blogData.title}
-            fill
-            priority
-            className="object-cover"
-          />
         </div>
 
         {/* Article content */}

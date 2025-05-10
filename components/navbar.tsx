@@ -22,9 +22,6 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { isAuthenticated, Handlelogout, userData } = useAuth();
-
-  console.log(userData);
-
   const firstLetter =
     userData?.name?.charAt(0).toUpperCase() ||
     userData?.email?.charAt(0).toUpperCase() ||

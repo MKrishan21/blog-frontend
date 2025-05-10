@@ -36,20 +36,20 @@ export const useAuthGuard = () => {
   return setInterceptors;
 };
 
-// GET
-// export const get = async (endpoint: string) => {
-//   const token = localStorage.getItem("accessToken");
-//   try {
-//     const response = await apiClient.get(endpoint, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-//     return response.data;
-//   } catch (error: any) {
-//     return error?.response;
-//   }
-// };
+// GET with JWT
+export const getJwt = async (endpoint: string) => {
+  const token = localStorage.getItem("accessToken");
+  try {
+    const response = await apiClient.get(endpoint, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    return error?.response;
+  }
+};
 
 export const get = async (endpoint: string) => {
   try {

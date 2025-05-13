@@ -351,10 +351,13 @@ export default function CreateBlogPage() {
                               Technology
                             </SelectItem>
                             <SelectItem value="lifestyle">Lifestyle</SelectItem>
+                            <SelectItem value="news">News</SelectItem>
                             <SelectItem value="business">Business</SelectItem>
                             <SelectItem value="health">Health</SelectItem>
                             <SelectItem value="finance">Finance</SelectItem>
-                            <SelectItem value="travel">Travel</SelectItem>
+                            <SelectItem value="entertainment">Entertainment</SelectItem>
+                            <SelectItem value="sports">Sports</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />

@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <ReactQueryProvider>
             <AuthProvider>
               <div className="relative max-w-7xl mx-auto px-2 lg:px-0 min-h-screen flex flex-col">
